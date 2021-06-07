@@ -43,7 +43,7 @@ The following image shows the web application's appearance :
 
 
 
-
+  
 ## URL 
 
 The following animation demonstrates the application functionality:

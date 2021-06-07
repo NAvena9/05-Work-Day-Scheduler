@@ -1,105 +1,53 @@
-var time = document.getElementById("currentDay");
-var T9AM = document.getElementById("9AM");
-var timeTable = document.getElementById("time-table");
-var today = moment();
-var schedulerData = [];
-var schedulerObj;
+// Display today's day and date
+var todayDate = moment().format('dddd, MMM Do YYYY, h:mm:ss a');
+$("#currentDay").html(todayDate);
 
-init();
-currentTime();
-colorCoded();
 
-function init(){
-  schedulerData = JSON.parse(localStorage.getItem("scheduler"));
-  console.log(schedulerData);
-  if(schedulerData !== null){
-    console.log(schedulerData);
-    loadEvents();
-  }
-};
+// we first set a function that will execute as soon as the document is "ready" or loaded with .ready. Here we first are setting the save btn, and as we will have text on different rows, it will save the content in the corresponding row (to the button)
+$(document).ready(function () { 
+    $(".saveBtn").on("click", function () {
+        var text = $(this).siblings(".task").val();
+        var time = $(this).parent().attr("id");
+        localStorage.setItem(time, text);
+    });
+   //Functiom of timestamping. We get the task time corresponding to the time block where the user is working, this done after looping through all the time blocks.
+    function timeStamp() {
+        var currentTime = moment().hour();
+        //looping throught each block to get the Id of the one where the user is working
+        $(".time-block").each(function () {
+            var taskTime = parseInt($(this).attr("id"));
 
-timeTable.addEventListener("click", function (event) {
-  if (event.target.matches("button")) {
-    schedulerObj = {
-      time: event.path[2].children[0].textContent,
-      event: event.path[2].children[1].children[0].value,
-    };
-    if (schedulerData == null) {
-      schedulerData = [];
-      // schedulerData[0] = schedulerObj;
-      schedulerData.push(schedulerObj);
-      console.log(schedulerData);
-      alert('Task saved')
-    } else {
-      for (var i = 0; i < schedulerData.length; i++) {
-        console.log(schedulerData[i].time);
-        console.log(schedulerObj.time);
-        if (schedulerData[i].time == schedulerObj.time) {
-          console.log("same");
-          schedulerData[i] = schedulerObj;
-          var flag = true;
-          i = schedulerData.length;
-        }
-      }
+            // compairing the Hour with the current task hour to assign the correct class for formating (present, past, future)
+            if (taskTime < currentTime) {
+                $(this).removeClass("future");
+                $(this).removeClass("present");
+                $(this).addClass("past");
+            }
+            else if (taskTime === currentTime) {
+                $(this).removeClass("past");
+                $(this).removeClass("future");
+                $(this).addClass("present");
+            }
+            else {
+                $(this).removeClass("present");
+                $(this).removeClass("past");
+                $(this).addClass("future");
 
-      if (!flag) {
-        schedulerData.push(schedulerObj);
-        console.log("NOTsame");
-      }
-      console.log(schedulerData);
-      alert('Task saved')
+            }
+        })
     }
 
-    var schedulerDataString = JSON.stringify(schedulerData);
-    localStorage.setItem("scheduler", schedulerDataString);
-  }
-});
+    // fetching the stored tasks and displaying them
+    $("#8 .task").val(localStorage.getItem("8"));
+    $("#9 .task").val(localStorage.getItem("9"));
+    $("#10 .task").val(localStorage.getItem("10"));
+    $("#11 .task").val(localStorage.getItem("11"));
+    $("#12 .task").val(localStorage.getItem("12"));
+    $("#13 .task").val(localStorage.getItem("13"));
+    $("#14 .task").val(localStorage.getItem("14"));
+    $("#15 .task").val(localStorage.getItem("15"));
+    $("#16 .task").val(localStorage.getItem("16"));
+    $("#17 .task").val(localStorage.getItem("17"));
 
-function loadEvents(){
-  console.log(schedulerData);  
-  for (var i = 0; i < schedulerData.length; i++) {
-    console.log(i);
-    for(var x = 0; x < 13; x++){
-      if (schedulerData[i].time == x + "AM" || schedulerData[i].time == x + "PM") {
-        console.log("in");
-        console.log(x);
-        console.log(schedulerData[i]);
-        if( x > 8){
-          var y = x - 9;
-        }else{
-          var y = x + 3;
-        }
-        console.log(timeTable.children[0].children[y].children[1].children[0]);
-        timeTable.children[0].children[y].children[1].children[0].textContent = schedulerData[i].event;
-      }
-
-    }
-  }
-};
-
-function currentTime() {
-  time.textContent = today.format("dddd, MMMM Do YYYY, h:mm:ss");
-  setInterval(() => {
-    today = moment();
-    time.textContent = today.format("dddd, MMMM Do YYYY, h:mm:ss");
-  }, 1000);
-}
-
-function colorCoded() {
-  var currentTime = today.format("H");
-  // var currentTime = 14;
-  for (var i = 0; i < 9; i++) {
-    // if (currentTime < i + 9 || currentTime == 12) {
-    if (currentTime < i + 9) {
-      timeTable.children[0].children[i].children[1].children[0].setAttribute(
-        "style",
-        "background-color: #77dd77;"
-      );
-    } else if (currentTime == i + 9) {
-      timeTable.children[0].children[i].children[1].children[0].setAttribute(
-        "style",
-        "background-color: #ff6961;"
-      );
-    }
-  }
-}
+    timeStamp();
+})
