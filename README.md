@@ -39,7 +39,7 @@ THEN the saved events persist
 
 The following image shows the web application's appearance :
 
-![demo](resources/demo.png)
+![demo](Assets/demo.png)
 
 
 
@@ -47,7 +47,7 @@ The following image shows the web application's appearance :
 ## URL 
 
 The following animation demonstrates the application functionality:
-
+https://navena9.github.io/05-Work-Day-Scheduler/
 
 
 
